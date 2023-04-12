@@ -7,14 +7,14 @@
         
         <div class="user-block">
           <div class="text" style="font-size: 26px;">
-            <!-- <router-link to="/shopping-cart"> -->
+            <router-link to="/shopping-cart">
                 <span><img src='../assets/svg/cart.svg'></span>
-                <!-- <span v-if="productsCounter" id="counter-products">{{productsCounter}}</span> -->
-            <!-- </router-link> -->
+                <span v-if="productsCounter" id="counter-products">{{productsCounter}}</span>
+            </router-link>
           </div>
           
-          <div class="text"><router-link to="/login"><span>Login</span></router-link></div>
-          <div class="text"><router-link to="/register"><span>Register</span></router-link></div>
+          <div class="text"><router-link to="/login"><span>Zaloguj</span></router-link></div>
+          <div class="text"><router-link to="/register"><span>Rejestracja</span></router-link></div>
         </div>
         
         <div class="hamburger" >
@@ -22,12 +22,12 @@
           <img @click="hamburgerClick" v-if="hamburgerFlag" src='../assets/svg/exit.svg' style="z-index: 2;">
           <div v-if="hamburgerFlag" id="hamburger-div">
             
-            <div class="text"><router-link to="/login"><span>Login</span></router-link></div>
-            <div class="text"><router-link to="/register"><span>Register</span></router-link></div>
+            <div class="text"><router-link to="/login"><span>Zaloguj</span></router-link></div>
+            <div class="text"><router-link to="/register"><span>Rejestracja</span></router-link></div>
             <div class="text" style="font-size: 26px; margin-top:6px;">
-              <!-- <router-link to="/shopping-cart"> -->
+              <router-link to="/shopping-cart">
                 <span>Koszyk</span>
-              <!-- </router-link> -->
+              </router-link>
             </div>
 
           </div>
