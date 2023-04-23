@@ -25,9 +25,9 @@ services:
       - POSTGRES_HOST=db 
       - POSTGRES_PORT=5432 
       - POSTGRES_DB=postgres 
-      - API_IMAGEKIT_ID=public_9Trc1S2AIMQyo3DYTNBoKFRi2XQ=
-      - API_IMAGEKIT_SECRET=private_hQ7a+eX944AEgHDZlOAJdoN04lM=
-      - API_IMAGEKIT_ENDPOINT=https://ik.imagekit.io/ztf601lz0
+      - API_IMAGEKIT_ID=
+      - API_IMAGEKIT_SECRET=
+      - API_IMAGEKIT_ENDPOINT=
     ports: 
       - 8000:80 
     networks: 
