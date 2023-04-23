@@ -27,22 +27,30 @@ ul{
 input, textarea{
   background-color: #2f3131;
   border: 1px solid black;
+  resize: none;
   
   &:focus{
     outline: none;
   }
-  
-  &::-webkit-outer-spin-button,
-  &::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
+
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
 }
 
 select{
   align-self: center;
   padding: 10px;
-  background-color: #282a3a;
+  background-color: #202222;;
   border: 1px solid black;
   cursor: pointer;
 }

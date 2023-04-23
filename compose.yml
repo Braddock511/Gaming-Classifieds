@@ -1,0 +1,61 @@
+version: '3.8'
+
+services: 
+  vueapp: 
+    container_name: vue-web 
+    build: 
+      context: . 
+      dockerfile: Dockerfile.vueapp 
+    ports: 
+      - 8080:80 
+    networks: 
+      - frontend_network 
+    depends_on: 
+      - database 
+      - api 
+
+  api: 
+    container_name: fastapi
+    build: 
+      context: . 
+      dockerfile: Dockerfile.api 
+    environment: 
+      - POSTGRES_USER=postgres 
+      - POSTGRES_PASSWORD=admin 
+      - POSTGRES_HOST=db 
+      - POSTGRES_PORT=5432 
+      - POSTGRES_DB=postgres 
+      - API_IMAGEKIT_ID=public_9Trc1S2AIMQyo3DYTNBoKFRi2XQ=
+      - API_IMAGEKIT_SECRET=private_hQ7a+eX944AEgHDZlOAJdoN04lM=
+      - API_IMAGEKIT_ENDPOINT=https://ik.imagekit.io/ztf601lz0
+    ports: 
+      - 8000:80 
+    networks: 
+      - frontend_network 
+      - backend_network 
+    depends_on: 
+      - database 
+
+  database: 
+    container_name: db 
+    image: postgres 
+    environment: 
+      - POSTGRES_USER=postgres 
+      - POSTGRES_PASSWORD=admin 
+      - POSTGRES_HOST=db 
+      - POSTGRES_PORT=5432 
+      - POSTGRES_DB=postgres 
+    volumes: 
+      - db:/var/lib/postgresql/data 
+    networks: 
+      - backend_network 
+
+networks: 
+  frontend_network: 
+    driver: bridge 
+
+  backend_network: 
+    driver: bridge 
+
+volumes: 
+  db:

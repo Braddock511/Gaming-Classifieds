@@ -1,0 +1,7 @@
+fastapi==0.94.1
+imagekitio==3.0.1
+requests==2.26.0
+uvicorn==0.20.0
+SQLAlchemy==2.0.4
+psycopg2-binary==2.9.5
+urllib3==1.26.7

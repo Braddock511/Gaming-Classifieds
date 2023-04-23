@@ -2,8 +2,8 @@
   <header>
         <router-link to='/' id="logo"><img src='../assets/logo.png' alt='logo' width="100" height="100"></router-link>
 
-        <input v-model="vinyl" type="text" placeholder="Szukaj" id="searchbar">
-        <button id="search-button"><img src='../assets/svg/search.svg'></button>
+        <input v-model="searchQuery" type="text" placeholder="Search" id="searchbar" @keydown.enter="searchGames">
+        <button id="search-button" @click="searchGames"><img src='../assets/svg/search.svg'></button>
         
         <div class="user-block">
           <div class="text" style="font-size: 26px;">
@@ -13,23 +13,23 @@
             </router-link>
           </div>
           
-          <div class="text"><router-link to="/login"><span>Zaloguj</span></router-link></div>
-          <div class="text"><router-link to="/register"><span>Rejestracja</span></router-link></div>
+          <div v-if='isLogin' class="text"><router-link to="/listing"><span>Listing offer</span></router-link></div>
+          <div v-if='!isLogin' class="text"><router-link to="/login"><span>Login</span></router-link></div>
+          <div v-if='!isLogin' class="text"><router-link to="/register"><span>Register</span></router-link></div>
         </div>
         
-        <div class="hamburger" >
+        <div class="hamburger">
           <img @click="hamburgerClick" v-if="!hamburgerFlag" src='../assets/svg/hamburger.svg'>
           <img @click="hamburgerClick" v-if="hamburgerFlag" src='../assets/svg/exit.svg' style="z-index: 2;">
           <div v-if="hamburgerFlag" id="hamburger-div">
-            
-            <div class="text"><router-link to="/login"><span>Zaloguj</span></router-link></div>
-            <div class="text"><router-link to="/register"><span>Rejestracja</span></router-link></div>
-            <div class="text" style="font-size: 26px; margin-top:6px;">
+            <div v-if='isLogin' class="text"><router-link to="/listing"><span>Listing offer</span></router-link></div>
+            <div v-if='!isLogin' class="text"><router-link to="/login"><span>Login</span></router-link></div>
+            <div v-if='!isLogin' class="text"><router-link to="/register"><span>Register</span></router-link></div>
+            <div class="text">
               <router-link to="/shopping-cart">
                 <span>Koszyk</span>
               </router-link>
             </div>
-
           </div>
         </div>
   </header>
@@ -42,14 +42,34 @@
         options: "Wszystkie kategorie",
         hamburgerFlag: false,
         hover: false,
-        vinyl: '',
-        totalPrice: 0
+        searchQuery: "",
+        totalPrice: 0,
+        productsCounter: this.$store.state.cart.length
       }
+    },
+    computed: {
+      isLogin() {
+          return this.$cookies.get("user-login") === "true"
+      },
     },
     methods:{
       hamburgerClick(){
         this.hamburgerFlag = !this.hamburgerFlag
+        
+      },
+      searchGames(){
+        this.$store.state.searchQuery = this.searchQuery
+        this.$router.push('/search-view')
       }
+    },
+    watch: {
+        '$store.state.cart': {
+            handler(newValue){
+            if (newValue) {
+                    this.productsCounter = this.$store.state.cart.length
+                }
+            }
+        }
     }
   }
 </script>
@@ -60,9 +80,7 @@
     position: sticky;
     width: 100%;
     background-color: rgb(34, 36, 36);
-    z-index: 99;
     padding: 10px;    
-    
       
     #searchbar{
       align-self: center;
@@ -105,14 +123,11 @@
         
         #counter-products{
           position: absolute;
-          background-color: #282a3a;
           font-size: 15px;
-          padding: 0.375em;
+          padding: 0.250em;
           border-radius: 90em;
-          margin-top: 15px;
+          margin-top: 20px;
           font-weight: 600;
-
-          
         }
       }
     }

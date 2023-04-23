@@ -1,29 +1,22 @@
 <template>
     <main>
         <nav>
-            <h2>Categories</h2>
-            <div class="category" v-for="(category) in categories">
-                <router-link :to="category.url">
-                    <table>
-                        <tr>
-                            <td>
-                                <span style="margin-left: 10px;">{{category.value}}</span>
-                            </td>
-                        </tr>
-                    </table>
-                </router-link>
+            <h1>Categories</h1>
+            <div class="category" v-for="(category) in categories" @click="goToGenre(category)">
+                <span>{{ category }}</span>
             </div>
         </nav>
         
         <aside>
-            <h2>Worth seeing</h2>
+            <h1>Worth seeing</h1>
             <div id="blocks">
                 <div id="wrap">
-                    <router-link  to="/" class="block" v-for="x in test">
+                    <div class="block" v-for="game in games" @click="goToProduct(game.id)">
+                        <img :src="game.image_url" />
                         <div class="description">
-                            {{ x.title }}
+                            {{ game.title }}
                         </div>
-                    </router-link>
+                    </div>
                 </div>
             </div>
         </aside>
@@ -31,47 +24,33 @@
 </template>
 
 <script>
+    import axios from 'axios'
+    
     export default{
         data(){
             return{
-                categories:[
-                {
-                    value: 'Action',
-                    url: ""
-                },
-                {
-                    value: 'Adventure',
-                    url: ""
-                },
-                {
-                    value: 'RPG',
-                    url: ""
-                },
-                {
-                    value: 'Strategy',
-                    url: ""
-                },
-                {
-                    value: 'Simulation',
-                    url: ""
-                },
-                {
-                    value: 'Sports',
-                    url: ""
-                },
-                {
-                    value: 'Horrors',
-                    url: ""
-                },
-                {
-                    value: 'Survivals',
-                    url: ""
-                },
-                {
-                    value: 'MMO',
-                    url: ""
-                },
-            ]}
+                games: [],
+                categories:['Action', 'Adventure', 'RPG', 'Strategy', 'Simulation', 'Sports', 'Horrors', 'Survivals', 'MMO', 'Puzzle'],
+            }
+        },
+        methods:{
+            async goToGenre(genre){
+                let url = 'http://127.0.0.1:8000/get-games'
+                url += genre ? `?genre=${genre}` : ''
+                let games = await axios.get(url).then(response => response.data.output)
+                this.$store.state.games = games
+                this.$router.push('/search-view')
+            },
+            goToProduct(gameId){
+                this.$store.state.id = gameId
+                localStorage.removeItem('game')
+                this.$router.push('/product')
+            }
+        },
+
+        async mounted(){
+            let url = 'http://127.0.0.1:8000/get-games'
+            this.games = (await axios.get(url).then(response => response.data.output)).slice(0, 8)
         }
     }
 
@@ -86,17 +65,20 @@
         margin-left: 10px;
         display: flex;
         gap: 10px;
+        margin-bottom: 10px;
 
         nav{
             width: 20%;
             background-color: $primary-color;
             
-            h2{
+            h1{
                 padding: 10px;
                 text-align: center;
             }
             .category{
                 padding: 10px;
+                font-size: 28px;
+                cursor: pointer;
                 &:hover {
                     opacity: 0.9;
                     border-left: 7px solid black;

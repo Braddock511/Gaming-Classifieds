@@ -18,7 +18,7 @@
             return {
             slides: [
                 {name: "red dead redemption 2", url: 'https://ik.imagekit.io/ztf601lz0/the-last-of-us-part-i_2_.jpg?updatedAt=1680799768527.png'},
-                {name: "the last of us 1", url: 'https://ik.imagekit.io/ztf601lz0/the-last-of-us-part-i.jpg?updatedAt=1680799461863.png'},
+                {name: "max payne 3", url: 'https://ik.imagekit.io/ztf601lz0/33862-Max-Payne-3-HD-Wallpaper.jpg?updatedAt=1681576546667'},
                 {name: "witcher 3", url: 'https://ik.imagekit.io/ztf601lz0/thumb-1920-587508.png?updatedAt=1680799975927.png'},
                 {name: "cyberpunk 2077", url: 'https://ik.imagekit.io/ztf601lz0/ded2bdf1df65f09413823cd15d0ca6b2.jpg?updatedAt=1680799887358.png'}
             ],
