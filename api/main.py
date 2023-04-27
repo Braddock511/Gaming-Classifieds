@@ -86,38 +86,39 @@ async def get_game(game_id: Optional[str] = None):
 async def get_game(request: Request):
     try:
         response = loads((await request.body()).decode('utf-8'))
-        response = response['newGame']
-        image = response['image']
+        new_game = response['newGame']
+        image = new_game['image']
         image_url = upload_file_imageKit(image)
+        user_id = db.get_user_id(response['userLogin'])
 
         game = {
-            "user_id": 0,
-            "title": response['title'],
-            "description": response['description'],
-            "genre":  response['genre'],
-            "platform": response['platform'],
-            "price": response['price'],
+            "user_id": user_id,
+            "title": new_game['title'],
+            "description": new_game['description'],
+            "genre":  new_game['genre'],
+            "platform": new_game['platform'],
+            "price": new_game['price'],
             "image_url": image_url['url']
         }
 
-        db.listing_game(game)
+        db.create_game(game)
 
         return {"status": 200, "output": game}
     
     except Exception as e:
         return {"error": f"Exception in get_game: {str(e)}"}
     
-@app.post("/payment")
-async def payment(request: Request):
+@app.post("/order")
+async def order(request: Request):
     try:
         response = loads((await request.body()).decode('utf-8'))
-        payment = response['payment']
-        db.add_payment(payment)
+        order = response['order']
+        db.add_order(order)
 
-        for game_id in payment['products_id']:
+        for game_id in order['products_id']:
             db.delete_game(game_id)
 
-        return {"status": 200, "output": payment}
+        return {"status": 200, "output": order}
     
     except Exception as e:
-        return {"error": f"Exception in payment: {str(e)}"}
+        return {"error": f"Exception in order: {str(e)}"}

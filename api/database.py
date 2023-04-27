@@ -43,8 +43,8 @@ class Games(Base):
     platform = Column(String, nullable=False)
     price = Column(Float, nullable=False)
 
-class Payments(Base):
-    __tablename__ = 'payments'
+class Orders(Base):
+    __tablename__ = 'orders'
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     email = Column(String)
@@ -107,8 +107,9 @@ with Session() as session:
                 price=prices[i])
             session.add(game)
 
-    credentials_data = ImageCredentials(**credentials)
-    session.add(credentials_data)
+    if session.query(ImageCredentials).count() == 0:
+        credentials_data = ImageCredentials(**credentials)
+        session.add(credentials_data)
         
     session.commit()
 
@@ -152,7 +153,7 @@ def get_games() -> list:
 
     return games
 
-def listing_game(game: dict):
+def create_game(game: dict):
     Session = sessionmaker(bind=engine)
 
     with Session() as session:
@@ -168,6 +169,13 @@ def delete_game(game_id: str):
         session.delete(game)
         session.commit()
 
+def get_user_id(login: str):
+    Session = sessionmaker(bind=engine)
+    
+    with Session() as session:
+        user_id = session.query(Users).filter_by(login=login).first().id
+        return user_id
+
 def get_credentials() -> dict:
     Session = sessionmaker(bind=engine)
     
@@ -179,11 +187,11 @@ def get_credentials() -> dict:
 
     return credentials
 
-def add_payment(payment: dict):
+def add_order(order: dict):
         Session = sessionmaker(bind=engine)
     
         with Session() as session:
-            new_payment = Payments(**payment)
+            new_payment = Orders(**order)
             session.add(new_payment)
             session.commit()
 
