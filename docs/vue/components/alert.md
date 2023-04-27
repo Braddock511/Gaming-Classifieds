@@ -1,0 +1,3 @@
+"Alert" - script that defines displays an alert message with a close button. The component receives an alert prop, which is an object that contains the message to display and the variant of the alert (e.g. success, error, warning, etc). The alert is displayed using the v-if directive, which shows the alert only if the alert.message property is truthy.
+
+The Transition component is used to add animation to the alert. The updated lifecycle hook is used to automatically remove the alert message after a certain amount of time (in this case, 5 seconds). When the btn-close button is clicked, the alert object is set to an empty object to hide the alert.
