@@ -1,25 +1,25 @@
 <template>
     <TheHeader/>
-    <div id="container">
+    <div id="container" v-if="!loading">
         <form @submit.prevent="buy">
             <main>
                 <div id="left">
                     <div id="client-data">
-                    <h2>payment information</h2>
+                    <h2>Payment information</h2>
             
                     <div class="block">
                         <label for="email">Email address <span class="red">*</span></label>
-                        <input type="email" id="email" name="email" required v-model="payment.email">
+                        <input type="email" id="email" name="email" required v-model="order.email">
                     </div>
             
                     <div class="block">
                         <label for="name">First and last name <span class="red">*</span></label>
-                        <input type="text" id="name" name="name" required v-model="payment.name">
+                        <input type="text" id="name" name="name" required v-model="order.name">
                     </div>
             
                     <div class="block">
                         <label for="phone">Phone number <span class="red">*</span></label>
-                        <input type="tel" id="phone" name="phone" pattern="[0-9]{9}" maxlength="9" required title="Enter phone number in format XXXXXXXXX" v-model="payment.phone">
+                        <input type="tel" id="phone" name="phone" pattern="[0-9]{9}" maxlength="9" required title="Enter phone number in format XXXXXXXXX" v-model="order.phone">
                     </div>
             
                     <h2>Shipping information</h2>
@@ -27,23 +27,23 @@
                     <div class="block">
                         <label for="city">City, postal code <span class="red">*</span></label>
                         <div class="sublock">
-                        <input type="text" id="city" name="city" required v-model="payment.city">
-                        <input type="text" id="city" name="code" pattern="[0-9]{2}-[0-9]{3}" maxlength="6" style="width: 20%;" required title="Enter postal code in format XX-XXX" v-model="payment.postalCode">
+                        <input type="text" id="city" name="city" required v-model="order.city">
+                        <input type="text" id="city" name="code" pattern="[0-9]{2}-[0-9]{3}" maxlength="6" style="width: 20%;" required title="Enter postal code in format XX-XXX" v-model="order.postalCode">
                         </div>
                     </div>
             
                     <div class="block">
                         <label for="address">Address, building number, apartment number <span class="red">*</span></label>
                         <div class="sublock">
-                        <input type="text" id="address" name="address" required v-model="payment.address">
-                        <input type="text" id="address" name="buildingNumber" required style="width: 15%;" v-model="payment.buildingNumber">
-                        <input type="text" id="address" name="apartmentNumber" style="width: 15%;" v-model="payment.apartmentNumber">
+                        <input type="text" id="address" name="address" required v-model="order.address">
+                        <input type="text" id="address" name="buildingNumber" required style="width: 15%;" v-model="order.buildingNumber">
+                        <input type="text" id="address" name="apartmentNumber" style="width: 15%;" v-model="order.apartmentNumber">
                         </div>
                     </div>
             
                     <div class="block">
                         <label for="instructions">Order instructions</label>
-                        <textarea id="instructions" name="instructions" v-model="payment.instructions"></textarea>
+                        <textarea id="instructions" name="instructions" v-model="order.instructions"></textarea>
                     </div>
                     </div>
                 </div>
@@ -59,6 +59,9 @@
             </div>
         </form>
     </div>
+    <div id="loading" v-if="loading">
+        <img src="@/assets/spinner.gif" alt="loading">
+    </div>
     <TheAlert :alert="alert"/>
 </template>
 
@@ -71,7 +74,7 @@
         data() {
             return {
                 cart: [],
-                payment: {
+                order: {
                     email: '',
                     name: '',
                     phone: '',
@@ -85,6 +88,7 @@
                     price: ''
                 },
                 alert: {},
+                loading: false
             };
         },
         methods:{
@@ -92,9 +96,11 @@
                 return parseFloat(this.cart.reduce((total, product) => total + product.price, 0))
             },
             async buy(){
-                this.payment.products_id = this.$store.state.cart
-                this.payment.price = (this.totalPrice() + 3.99).toFixed(2)
-                const response = await axios.post("http://127.0.0.1:8000/payment", {payment: this.payment})
+                this.loading = true
+                this.order.products_id = this.$store.state.cart
+                this.order.price = (this.totalPrice() + 3.99).toFixed(2)
+                const response = await axios.post("http://127.0.0.1:8000/order", {order: this.order})
+                console.log(response)
                 if (response.data.status == 200){
                     this.$store.state.cart = []
                     this.alert = {variant: "success", message: "Success"}

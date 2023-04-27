@@ -14,6 +14,7 @@
           </div>
           
           <div v-if='isLogin' class="text"><router-link to="/listing"><span>Listing offer</span></router-link></div>
+          <div v-if='isLogin' class="text" style="cursor: pointer;" @click="logout"><span>Logout</span></div>
           <div v-if='!isLogin' class="text"><router-link to="/login"><span>Login</span></router-link></div>
           <div v-if='!isLogin' class="text"><router-link to="/register"><span>Register</span></router-link></div>
         </div>
@@ -23,6 +24,7 @@
           <img @click="hamburgerClick" v-if="hamburgerFlag" src='../assets/svg/exit.svg' style="z-index: 2;">
           <div v-if="hamburgerFlag" id="hamburger-div">
             <div v-if='isLogin' class="text"><router-link to="/listing"><span>Listing offer</span></router-link></div>
+            <div v-if='isLogin' class="text"><span>Logout</span></div>
             <div v-if='!isLogin' class="text"><router-link to="/login"><span>Login</span></router-link></div>
             <div v-if='!isLogin' class="text"><router-link to="/register"><span>Register</span></router-link></div>
             <div class="text">
@@ -36,6 +38,8 @@
 </template>
 
 <script>
+  import axios from 'axios'
+
   export default{
     data(){
       return {
@@ -49,7 +53,7 @@
     },
     computed: {
       isLogin() {
-          return this.$cookies.get("user-login") === "true"
+          return this.$cookies.get("user-login-flag") === "true"
       },
     },
     methods:{
@@ -57,9 +61,25 @@
         this.hamburgerFlag = !this.hamburgerFlag
         
       },
-      searchGames(){
-        this.$store.state.searchQuery = this.searchQuery
+      async searchGames(){
+        if (this.searchQuery == ""){
+          let games = await axios.get('http://127.0.0.1:8000/get-games').then(response => response.data.output)
+          this.$store.state.games = games
+
+        }
+        else{
+          this.$store.state.searchQuery = this.searchQuery
+        }
         this.$router.push('/search-view')
+      },
+      logout(){
+        this.$cookies.set('user-login-flag', false, '', '/', '', false, 'Lax')
+        if (this.$route.path != "/"){
+          this.$router.push("/")
+        }
+        else{
+          this.$router.go()
+        }
       }
     },
     watch: {

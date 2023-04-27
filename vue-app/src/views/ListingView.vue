@@ -1,7 +1,6 @@
 <template>
     <TheHeader/>
-
-    <div id="container">
+    <div id="container" v-if="!loading">
         <div id="left">
             <h1>Game Image</h1>
             <label for="file-upload" ref="fileLabel" style="cursor: pointer;">
@@ -16,12 +15,12 @@
             <form @submit.prevent="addGame">
             <div class="input-container">
                 <label><h2>Title</h2></label>
-                <input type="text" v-model="title" required>
+                <input type="text" v-model="title" required maxlength="50">
             </div>
             
             <div class="input-container">
                 <label><h2>Description</h2></label>
-                <textarea v-model="description" required></textarea>
+                <textarea v-model="description" required maxlength="250"></textarea>
             </div>
 
             <div class="input-container">
@@ -57,11 +56,14 @@
             </div>
 
             <div class="input-container">
-                <button class="btn btn-primary" type="submit" style="padding: 0.5rem; font-size: 20px;" @click="listingGmae">Add game</button>
+                <button class="btn btn-primary" type="submit" style="padding: 0.5rem; font-size: 20px;" @click="listingGame">Add game</button>
             </div>
             </form>
         </div>
   </div>
+    <div id="loading" v-if="loading">
+        <img src="@/assets/spinner.gif" alt="loading">
+    </div>
   <TheAlert :alert="alert"/>
 </template>
 
@@ -81,11 +83,12 @@
                 image: '',
                 response: "",
                 alert: {},
+                loading: false
             }
         },
         methods:{
-            async listingGmae(){
-                const newGame = {
+            async listingGame(){
+                const game = {
                     title: this.title,
                     description: this.description,
                     genre: this.genre,
@@ -94,8 +97,9 @@
                     image: this.image,
                 };
 
-                this.response = await axios.post("http://127.0.0.1:8000/listing-game", {newGame})
-                
+                this.loading = true
+                this.response = await axios.post("http://127.0.0.1:8000/listing-game", {newGame: game, userLogin: this.$cookies.get('user-login')})
+                console.log(this.response)
                 if (this.response.data.status == 200){
                     this.alert = {variant: "success", message: "Listing - success"}
                     setTimeout(()=>{this.$router.push("/")}, 2000)

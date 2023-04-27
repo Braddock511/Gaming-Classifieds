@@ -58,6 +58,10 @@
                 if (index !== -1) {
                     this.cart.splice(index, 1)
                     this.$store.state.cart.splice(index, 1)
+                 
+                    if (this.cart.length == 0){
+                        this.$router.go(0)
+                    }
                 }
             },
             goToProduct(gameId){
